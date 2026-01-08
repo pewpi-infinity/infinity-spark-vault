@@ -1,8 +1,7 @@
 name: Build and deploy Pages
 on:
   push:
-    branches:
-      - main
+    branches: [ main ]
 
 permissions:
   contents: read
@@ -10,13 +9,13 @@ permissions:
   id-token: write
 
 jobs:
-  build:
+  build-and-deploy:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Use Node.js
+      - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '18'
@@ -27,19 +26,10 @@ jobs:
       - name: Build
         run: npm run build
 
-      # Note: This workflow uses actions/upload-pages-artifact (specialized for Pages)
-      # For general artifact handling, use actions/upload-artifact@v4 or later
-      # Note: This workflow uses actions/upload-pages-artifact (specialized for GitHub Pages).
-      # For general artifact uploads, use actions/upload-artifact@v4 or later to ensure
-      # compatibility and unique artifact naming as required by v4.
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v1
         with:
           path: ./dist
 
-  deploy:
-    needs: build
-    runs-on: ubuntu-latest
-    steps:
       - name: Deploy to GitHub Pages
         uses: actions/deploy-pages@v1
